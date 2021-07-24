@@ -1,4 +1,8 @@
 //関数
+bool isCrossing(int a,int b, int c, int d) { //閉区間[a,b],[c,d]が共通部分を持つか判定
+  if (max(a,c)<=min(b,d) return 1;
+  else return 0;
+}
 vector<long double> VRot(long double x, long double y, long double rad) {//ベクトルを回転する関数(引数はx,y,θ(rad))
   long double Sin=sin(rad);
   long double Cos=cos(rad);
