@@ -15,3 +15,12 @@ int String { //文字列問題
 }
 
 }
+
+int Games { //ゲーム問題
+ARC046B 石取り大作戦 https://atcoder.jp/contests/arc046/tasks/arc046_b
+N個の石が積まれた1つの山から先行はA,後攻はBまで各ターンに石を取り、最後の一個を取った方が勝ち。
+}
+
+int Nibu { //にぶたん
+    ABC174E Logs https://atcoder.jp/contests/abc174/tasks/abc174_e
+}

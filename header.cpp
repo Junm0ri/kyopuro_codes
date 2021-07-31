@@ -21,7 +21,6 @@ using namespace std;
 using Graph = vector<vector<int>>;
 #define ll long long
 #define vvi(V,H,W) vector<vector<int>> (V)((H),vector<int>(W));
-#define vvid(V,H,W,N) vector<vector<int>> (V)((H),vector<int>((W),(N)));
 #define vvl(V,H,W) vector<vector<ll>> (V)((H),vector<ll>(W));
 #define vvs(V,H,W) vector<vector<string>> (V)((H),vector<string>(W));
 #define vvc(V,H,W) vector<vector<char>> (V)((H),vector<char>(W));
@@ -44,6 +43,17 @@ using Graph = vector<vector<int>>;
 #define AUTO(x,V) for (auto (x):(V))
 #define int long long
 //fixed << setprecision(10) <<
+Graph makeGraph(int N, int V) {
+  Graph G(N);
+  irep (V) {
+    int A,B;
+    cin >>A>>B;
+    A--;B--;
+    G[A].push_back(B);
+    G[B].push_back(A);
+  }
+  return G;
+}
 
 signed main() {
   
