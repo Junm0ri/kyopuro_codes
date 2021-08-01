@@ -23,4 +23,10 @@ N個の石が積まれた1つの山から先行はA,後攻はBまで各ターン
 
 int Nibu { //にぶたん
     ABC174E Logs https://atcoder.jp/contests/abc174/tasks/abc174_e
+    N本の木があり、K回だけそれらを切ることができるときの最大値の最小を求める。
+}
+
+int Sanbu { //さんぶたん
+    ARC054B ムーアの法則 https://atcoder.jp/contests/arc054/tasks/arc054_b
+    典型的な三分探索
 }

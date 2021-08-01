@@ -208,7 +208,9 @@ int main() {
 ・最小の要素を取り出す
 int main() {
   // 小さい順に取り出される優先度付きキュー
+  priority_queue<int, vector<int>, greater<int>> pq;
   
+  priority_queue<int> pq;
   pq.push(10);
   pq.push(3);
   pq.push(6);
@@ -257,7 +259,7 @@ int main() {
   }
 }
 }
-int priority_queue<int, vector<int>, greater<int>> pq;multiset() {
+int multiset() { //マルチセット
     //変数宣言（空集合）
   multiset<int> s;
   //要素の挿入
@@ -527,6 +529,13 @@ int main() {
 
   // 10 を超える最小の要素は 13
   cout << *upper_bound(a.begin(), a.end(), 10) << endl; // 13
+
+  //求めた値の「位置」を求める
+  auto it=lower_bound(a.begin(),a.end(),10)-A.begin(); //イテレータ
+  int id=it-a.begin() //イテレータから「位置」を求める
+  cout<<id<<endl; //1
+  cout<<a[id]>>endl; //10
+
 }
  //
 }
