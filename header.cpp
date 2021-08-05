@@ -15,6 +15,7 @@
 
 
 #include <bits/stdc++.h>
+#include<cmath>
 using namespace std;
 // #include<boost/multiprecision/cpp_int.hpp>
 // using namespace boost::multiprecision;

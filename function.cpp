@@ -577,14 +577,30 @@ struct RMQ {
         for (int k = n - 2; k >= 0; k--) dat[k] = fx(dat[2 * k + 1], dat[2 * k + 2]);
     }
 
-    void update(int i, T x) {
-        i += n - 1;
-        dat[i] = x;
-        while (i > 0) {
-            i = (i - 1) / 2;  // parent
-            dat[i] = fx(dat[i * 2 + 1], dat[i * 2 + 2]);
+    /* lazy eval */
+    void eval(int k) {
+        if (lazy[k] == INF) return;  // 更新するものが無ければ終了
+        if (k < n - 1) {             // 葉でなければ子に伝搬
+            lazy[k * 2 + 1] = lazy[k];
+            lazy[k * 2 + 2] = lazy[k];
+        }
+        // 自身を更新
+        dat[k] = lazy[k];
+        lazy[k] = INF;
+    }
+ 
+    void update(int a, int b, T x, int k, int l, int r) {
+        eval(k);
+        if (a <= l && r <= b) {  // 完全に内側の時
+            lazy[k] = x;
+            eval(k);
+        } else if (a < r && l < b) {                     // 一部区間が被る時
+            update(a, b, x, k * 2 + 1, l, (l + r) / 2);  // 左の子
+            update(a, b, x, k * 2 + 2, (l + r) / 2, r);  // 右の子
+            dat[k] = min(dat[k * 2 + 1], dat[k * 2 + 2]);
         }
     }
+    void update(int a, int b, T x) { update(a, b, x, 0, 0, n); }
 
     // the minimum element of [a,b)
     T query(int a, int b) { return query_sub(a, b, 0, 0, n); }
@@ -631,6 +647,24 @@ struct RMQ {
         }
     }
 };
+
+//使用例（典型90 29）https://atcoder.jp/contests/typical90/tasks/typical90_ac
+  signed main() {
+    int W,N;
+    cin >>W>>N;
+    RMQ<int> A(W);
+  
+    irep (W) A.set(i,0);
+    A.build();
+ 
+    irep(N) {
+    int L,R;
+    cin >>L >>R;
+    int X=A.query(L-1,R)-1;
+    cout<<-1*X<<endl;
+    A.update(L-1,R,X);
+    }
+  }
 }
 void Daikusutora() { //ダイクストラ法
     struct Edge {
@@ -842,4 +876,194 @@ int main()
   cout << "最小全域木のコスト: " << g.kruskal() << endl;
   return 0;
 }
+}
+void TreeDiameter { //木の直径を求める
+  struct Edge {
+    int to;
+    int cost;
+};
+using Graph = vector<vector<Edge>>;  // cost の型を long long に指定
+
+/* tree_diamiter : dfs を用いて重み付き木 T の直径を求める
+    計算量: O(N)
+*/
+pair<int, int> dfs(const Graph &G, int u, int par) {  // 最遠点間距離と最遠点を求める
+    pair<int, int> ret = make_pair(0, u);
+    for (auto e : G[u]) {
+        if (e.to == par) continue;
+        auto next = dfs(G, e.to, u);
+        next.first += e.cost;
+        ret = max(ret, next);
+    }
+    return ret;
+}
+
+int tree_diamiter(const Graph &G) {
+    pair<int, int> p = dfs(G, 0, -1);
+    pair<int, int> q = dfs(G, p.second, -1);
+    return q.first;
+}
+
+//使用例
+//らせん階段
+// カブト虫
+// 廃墟の街
+// イチジクのタルト
+// カブト虫
+//ドロローサへの道
+// カブト虫
+// 特異点
+// ジョット
+// エンジェル
+// 紫陽花
+// カブト虫
+// 特異点
+// 秘密の皇帝
+
+
+#include <bits/stdc++.h>
+using namespace std;
+// #include<boost/multiprecision/cpp_int.hpp>
+// using namespace boost::multiprecision;
+// using Graph = vector<vector<int>>;
+#define ll long long
+#define vvi(V,H,W) vector<vector<int>> (V)((H),vector<int>(W));
+#define vvl(V,H,W) vector<vector<ll>> (V)((H),vector<ll>(W));
+#define vvs(V,H,W) vector<vector<string>> (V)((H),vector<string>(W));
+#define vvc(V,H,W) vector<vector<char>> (V)((H),vector<char>(W));
+#define irep(n) for (int i=0; i < (n); ++i)
+#define irepf1(n) for (int i=1; i <= (n); ++i)
+#define jrep(n) for (int j=0; j < (n); ++j)
+#define jrepf1(n) for (int j=1; j <= (n); ++j)
+#define krep(n) for (int k=0; k < (n); ++k)
+#define krepf1(n) for (int k=1; k <= (n); ++k)
+#define REP(i,s,e) for (int (i)=(s); (i)<(e);(i)++)
+#define PI 3.14159265358979323846264338327950288
+#define mod 1000000007
+#define eps 0.00000001
+#define Find(V,X) find(V.begin(),V.end(),X)
+#define Sort(V) sort((V).begin(),(V).end())
+#define Reverse(V) reverse((V).begin(),(V).end())
+#define Greater(V) sort((V).begin(),(V).end(),greater<int>())
+#define cmin(ans,A) (ans)=min((ans),(A))
+#define cmax(ans,A) (ans)=max((ans),(A))
+#define AUTO(x,V) for (auto (x):(V))
+#define int long long
+//fixed << setprecision(10) <<
+
+ 
+struct Edge {
+    int to;
+    int cost;
+};
+using Graph = vector<vector<Edge>>;  // cost の型を long long に指定
+
+/* tree_diamiter : dfs を用いて重み付き木 T の直径を求める
+    計算量: O(N)
+*/
+pair<int, int> dfs(const Graph &G, int u, int par) {  // 最遠点間距離と最遠点を求める
+    pair<int, int> ret = make_pair(0, u);
+    for (auto e : G[u]) {
+        if (e.to == par) continue;
+        auto next = dfs(G, e.to, u);
+        next.first += e.cost;
+        ret = max(ret, next);
+    }
+    return ret;
+}
+
+int tree_diamiter(const Graph &G) {
+    pair<int, int> p = dfs(G, 0, -1);
+    pair<int, int> q = dfs(G, p.second, -1);
+    return q.first;
+}
+
+signed main() {
+  int N;
+  cin >>N;
+  Graph G(N);
+  irep(N-1) {
+    int A,B;
+    cin >>A>>B;
+    A--;B--;
+    Edge EA={B,1};
+    Edge EB={A,1};
+    G[A].push_back(EA);
+    G[B].push_back(EB);
+
+  }
+  cout<<tree_diamiter(G)+1<<endl;
+
+}
+
+
+}
+void SCC{ //強連結成分分解
+  struct SCC { //強連結成分分解
+  
+  int V;
+  map<int,int> MP; //各強連結成分の要素数
+  vector<int> vs; //帰りがけの順番
+  bool used[100001]; //頂点が探索済みか否か
+  int cmp[100001]; //強連結成分のトポロジカル順序
+  int CSize=0; //強連結成分の数
+  Graph G;
+  Graph rG;
+
+  SCC(Graph A, Graph rA) {
+    G=A;
+    rG=rA;
+    V=G.size();
+    memset(used,0,sizeof(used));
+    vs.clear();
+    for (int v=0; v<V;v++) if (!used[v]) dfs(v);
+    memset(used,0,sizeof(used));
+    for (int i=vs.size()-1;i>=0;i--) {
+      if (!used[vs[i]]) rdfs(vs[i],CSize++);
+    }
+  }
+
+  void dfs(int v) {
+    used[v]=true;
+    for (auto x:G[v]) {
+      if (!used[x]) dfs(x);
+    }
+    vs.push_back(v);
+    }
+
+  void rdfs(int v, int k) {
+    MP[k]++;
+    used[v]=true;
+    cmp[v]=k;
+    for (auto x:rG[v]) if (!used[x]) rdfs(x,k);
+    }
+
+  };
+
+  //使用例（典型90 21） https://atcoder.jp/contests/typical90/tasks/typical90_u
+
+  signed main() {
+  int N,M;
+  cin >>N >>M;
+  Graph G(N);
+  Graph rG(N);
+  irep (M) {
+    int A,B;
+    cin >>A>>B;
+    A--;B--;
+    G[A].push_back(B);
+    rG[B].push_back(A);
+  }
+
+  SCC S=SCC(G,rG);
+
+
+  int ans=0;
+  for (auto x:S.MP) {
+    ans+=x.second*(x.second-1)/2;
+  }
+  cout<<ans<<endl;
+  
+}
+
 }
