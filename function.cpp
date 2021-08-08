@@ -1067,3 +1067,109 @@ void SCC{ //強連結成分分解
 }
 
 }
+void MaxFlow{ //最大フロー
+  struct Edge {
+  int to,cap,rev;
+};
+
+//ヘッダーのMax_Vを調整して使用,Graphを作成し、max_flow(s,t)を呼び出すことで最大フローが返される
+vector<vector<Edge>> G(Max_V);
+bool used[Max_V];
+
+void add_Edge(int from, int to, int cap) {
+  G[from].push_back((Edge) {to,cap,G[to].size()});
+  G[to].push_back((Edge) {from,0,G[from].size()-1});
+}
+
+int dfs(int v, int t, int f) {
+  if (v==t) return f;
+  used[v] =true;
+
+  for (int i=0; i<G[v].size();i++) {
+    Edge &e =G[v][i];
+    if (!used[e.to] && e.cap>0) {
+      int d =dfs(e.to, t ,min(f,e.cap));
+      if (d>0) {
+        e.cap -=d;
+        G[e.to][e.rev].cap+=d;
+        return d;
+      }
+    }
+  }
+  return 0;
+}
+
+int max_flow(int s, int t) {//s:始点,t:終点
+  int flow=0;
+  while(1) {
+    memset(used,0,sizeof(used));
+    int f =dfs(s,t,INF);
+    if (f==0) return flow;
+    flow +=f;
+  }
+}
+
+　//使用例
+　struct Edge {
+  int to,cap,rev;
+};
+
+// using Graph =vector<vector<Edge>>;
+vector<vector<Edge>> G(Max_V);
+bool used[Max_V];
+
+void add_Edge(int from, int to, int cap) {
+  G[from].push_back((Edge) {to,cap,G[to].size()});
+  G[to].push_back((Edge) {from,0,G[from].size()-1});
+}
+
+int dfs(int v, int t, int f) {
+  if (v==t) return f;
+  used[v] =true;
+
+  for (int i=0; i<G[v].size();i++) {
+    Edge &e =G[v][i];
+    if (!used[e.to] && e.cap>0) {
+      int d =dfs(e.to, t ,min(f,e.cap));
+      if (d>0) {
+        e.cap -=d;
+        G[e.to][e.rev].cap+=d;
+        return d;
+      }
+    }
+  }
+  return 0;
+}
+
+int max_flow(int s, int t) {//s:始点,t:終点
+  int flow=0;
+  while(1) {
+    memset(used,0,sizeof(used));
+    int f =dfs(s,t,INF);
+    if (f==0) return flow;
+    flow +=f;
+  }
+}
+
+signed main() {
+  int N;
+  cin >>N;
+  // G.resize(2*N+2);
+  vector<P> A(N);
+  vector<P> C(N);
+  irep(N) cin >>A[i].first>>A[i].second;
+  irep(N) cin >>C[i].first>>C[i].second;
+  irepf1(N) add_Edge(0,i,1);
+  irepf1(N) add_Edge(i+N,2*N+1,1);
+  irep(N) {
+    jrep(N) {
+      if (A[i].first<C[j].first&&A[i].second<C[j].second) {
+        add_Edge(i+1,j+1+N,1);
+        //cout<<100000000000<<endl;
+      }
+    }
+  }
+  cout<<max_flow(0,2*N+1)<<endl;
+}
+
+}

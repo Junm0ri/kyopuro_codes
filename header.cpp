@@ -21,6 +21,7 @@ using namespace std;
 // using namespace boost::multiprecision;
 using Graph = vector<vector<int>>;
 #define ll long long
+#define P pair<int,int>
 #define vvi(V,H,W) vector<vector<int>> (V)((H),vector<int>(W));
 #define vvl(V,H,W) vector<vector<ll>> (V)((H),vector<ll>(W));
 #define vvs(V,H,W) vector<vector<string>> (V)((H),vector<string>(W));
@@ -33,6 +34,8 @@ using Graph = vector<vector<int>>;
 #define krepf1(n) for (int k=1; k <= (n); ++k)
 #define REP(i,s,e) for (int (i)=(s); (i)<(e);(i)++)
 #define PI 3.14159265358979323846264338327950288
+#define INF 1000000000 //問題毎に設定
+#define Max_V 100000
 #define mod 1000000007
 #define eps 0.00000001
 #define Find(V,X) find(V.begin(),V.end(),X)
