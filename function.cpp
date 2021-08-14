@@ -228,6 +228,15 @@ vector<int> enum_div(int n){ //自分以外の約数全列挙
 int stringcount(string s, char c) { //文字数カウント
     return count(s.cbegin(), s.cend(), c);
 }
+void dfs_TreeSon (int pos,int pre) {//グローバル変数dpに自身を含む子の個数を格納する
+  dp[pos]=1;
+  for (int i:G[pos]) {
+    if (i!=pre) {
+      dfs(i,pos);
+      dp[pos] +=dp [i];
+    }
+  }
+}
 #include<boost/multiprecision/cpp_int.hpp> 
 //C++で多倍長整数を扱える（メモリと計算量に注意）
 // 上のライブラリをincludeし、宣言をcpp_int Nとするだけで多倍長整数を使える
@@ -765,6 +774,227 @@ signed main() {
     cout<<ans[A]+ans[B]<<endl;
   }
 }
+
+ //使用例2(経路復元) https://atcoder.jp/contests/ahc005/submissions/24826767
+ //らせん階段
+// カブト虫
+// 廃墟の街
+// イチジクのタルト
+// カブト虫
+//ドロローサへの道
+// カブト虫
+// 特異点
+// ジョット
+// エンジェル
+// 紫陽花
+// カブト虫
+// 特異点
+// 秘密の皇帝
+
+
+#include <bits/stdc++.h>
+#include<cmath>
+#include <random>
+using namespace std;
+// #include<boost/multiprecision/cpp_int.hpp>
+// using namespace boost::multiprecision;
+const long long INF = 1LL << 60;
+#define ll long long
+#define vvi(V,H,W) vector<vector<int>> (V)((H),vector<int>(W));
+#define vvl(V,H,W) vector<vector<ll>> (V)((H),vector<ll>(W));
+#define vvs(V,H,W) vector<vector<string>> (V)((H),vector<string>(W));
+#define vvc(V,H,W) vector<vector<char>> (V)((H),vector<char>(W));
+#define irep(n) for (int i=0; i < (n); ++i)
+#define irepf1(n) for (int i=1; i <= (n); ++i)
+#define jrep(n) for (int j=0; j < (n); ++j)
+#define jrepf1(n) for (int j=1; j <= (n); ++j)
+#define krep(n) for (int k=0; k < (n); ++k)
+#define krepf1(n) for (int k=1; k <= (n); ++k)
+#define REP(i,s,e) for (int (i)=(s); (i)<(e);(i)++)
+#define PI 3.14159265358979323846264338327950288
+#define mod 1000000007
+#define eps 0.00000001
+#define Find(V,X) find(V.begin(),V.end(),X)
+#define Sort(V) sort((V).begin(),(V).end())
+#define Reverse(V) reverse((V).begin(),(V).end())
+#define Greater(V) sort((V).begin(),(V).end(),greater<int>())
+#define cmin(ans,A) (ans)=min((ans),(A))
+#define cmax(ans,A) (ans)=max((ans),(A))
+#define AUTO(x,V) for (auto (x):(V))
+#define int long long
+//fixed << setprecision(10) <<
+
+
+
+
+
+struct Edge {
+    long long to;
+    long long cost;
+};
+
+using Graph = vector<vector<Edge>>;
+using P = pair<long, int>;
+vector<string> V;
+set<pair<int,int>> S;
+set<pair<int,int>> No;
+Graph G;
+int N,si,sj;
+int di[4]={0,1,0,-1};
+int dj[4]={1,0,-1,0};
+
+void dijkstra(const Graph &G, int s, vector<long long> &dis, vector<int> &prev) {
+    int N = G.size();
+    dis.resize(N, INF);
+    prev.resize(N, -1); // 初期化
+    priority_queue<P, vector<P>, greater<P>> pq; 
+    dis[s] = 0;
+    pq.emplace(dis[s], s);
+    while (!pq.empty()) {
+        P p = pq.top();
+        pq.pop();
+        int v = p.second;
+        if (dis[v] < p.first) {
+            continue;
+        }
+        for (auto &e : G[v]) {
+            if (dis[e.to] > dis[v] + e.cost) {
+                dis[e.to] = dis[v] + e.cost;
+                prev[e.to] = v; // 頂点 v を通って e.to にたどり着いた
+                pq.emplace(dis[e.to], e.to);
+            }
+        }
+    }
+}
+
+vector<int> get_path(const vector<int> &prev, int t) {
+    vector<int> path;
+    for (int cur = t; cur != -1; cur = prev[cur]) {
+        path.push_back(cur);
+    }
+    reverse(path.begin(), path.end()); // 逆順なのでひっくり返す
+    return path;
+}
+
+void see(int A,int B){ //見える範囲を確認する
+  //cout<<6<<endl;
+  S.erase({A,B});
+  int i=A,j=B;
+  //cout<<7<<endl;
+  while (1) {
+    i++;
+    if (i>=N) break;
+    if (V[i][j]=='#') break;
+    S.erase({i,j});
+  }
+  i=A,j=B;
+  while (1) {
+    i--;
+    if (i<0) break;
+    if (V[i][j]=='#') break;
+    S.erase({i,j});
+  }
+  i=A,j=B;
+  while (1) {
+    j++;
+    if (j>=N) break;
+    if (V[i][j]=='#') break;
+    S.erase({i,j});
+  }
+  i=A,j=B;
+  while (1) {
+    j--;
+    if (j<0) break;
+    if (V[i][j]=='#') break;
+    S.erase({i,j});
+  }
+  return;
+}
+
+void move(int fi,int fj,int ti,int tj) {
+  vector<int> dis;
+  vector<int> prev;
+  dijkstra(G,fi*N+fj,dis,prev);
+  vector<int> Path=get_path(prev,ti*N+tj);
+  int PS=Path.size();
+  
+  irepf1(PS-1) {
+    //cout<<Path[i]<<endl;
+    int ci=Path[i]/N;
+    int cj=Path[i]%N;
+    see(ci,cj);
+    if (Path[i]-Path[i-1]==1) cout<<'R';
+    else if (Path[i]-Path[i-1]==-1) cout<<'L';
+    else if (Path[i]-Path[i-1]==-N) cout<<'U';
+    else if (Path[i]-Path[i-1]==N) cout<<'D';
+  }
+  //cout<<5<<endl;
+  return;
+}
+
+signed main() {
+  cin >>N >>si>>sj;
+  V.resize(N);
+  G.resize(N*N);
+  vector<pair<int,int>> stock;
+  irep(N) cin >>V[i];
+  irep(N) { //グラフの作成
+      jrep(N) {
+          if (V[i][j]=='#') continue;
+          krep(4) {
+              int ni=i+di[k];
+              int nj=j+dj[k];
+              if (ni<0||nj<0||ni>=N||nj>=N||V[ni][nj]=='#') continue;
+              Edge E={ni*N+nj,V[ni][nj]-'0'};
+              G[i*N+j].push_back(E);
+          }
+      }
+  }
+  
+  irep(N) { //setの要素作成
+      jrep(N) if (V[i][j]!='#') {
+          S.insert({i,j});
+          stock.push_back({i,j});
+      }
+    else No.insert({i,j});
+  }
+  int Size=stock.size();
+  
+    // irep(N*N) { //グラフの確認
+    //     cout<<i<<" ";
+    //     for (auto x:G[i]) cout<<x.to<<" "<<x.cost<<" ";
+    //     cout<<endl;
+    // }
+
+  int i=si,j=sj;
+  //cout<<S.size()<<endl;
+  /*while (1) {
+    see(i,j);
+    int ni=rand()%N;
+    int nj=rand()%N;
+    //cout<<ni<<" "<<nj<<endl;
+    if (S.count({ni,nj})||No.count({ni,nj})) continue;
+    move(i,j,ni,nj);
+    i=ni;
+    j=nj;
+    if (S.size()==0) break;
+  }*/
+  bool flag=true;
+  while (S.size()!=0) {
+    int ni,nj;
+    //cout<<1<<endl;
+    for (auto x:S) {
+      ni=x.first;
+      nj=x.second;
+      if (flag) break;
+    }
+    move(i,j,ni,nj);
+    i=ni;
+    j=nj;
+    flag=!flag;
+  }
+  move(i,j,si,sj); //開始地点へ
+}
 }
 void Kraskal() { //クラスカル法
 
@@ -1109,7 +1339,7 @@ int max_flow(int s, int t) {//s:始点,t:終点
   }
 }
 
-　//使用例
+　//使用例(ARC092 C):最大マッチングとして利用
 　struct Edge {
   int to,cap,rev;
 };
