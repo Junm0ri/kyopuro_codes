@@ -1282,7 +1282,7 @@ void SCC{ //強連結成分分解
 
   };
 
-  //使用例（典型90 21） https://atcoder.jp/contests/typical90/tasks/typical90_u
+  //使用例（典型90 21） https://atcoder.jp/contests/typical90/submissions/24791685
 
   signed main() {
   int N,M;
@@ -2082,3 +2082,69 @@ signed main() {
   cout<<ans<<'\n';
 }
 }
+void TopoSort{//トポロジカルソート（DAG判定にも使用可）
+  /* topo_sort(G): グラフG をトポロジカルソート
+    返り値: トポロジカルソートされた頂点番号
+    計算量: O(|E|+|V|)
+    DAG検出：返り値の配列サイズがもとのグラフの頂点数と等しければDAG
+ */
+
+  vector<int> topo_sort(const Graph &G) {  // bfs
+    vector<int> ans;
+    int n = (int)G.size();
+    vector<int> ind(n);            // ind[i]: 頂点iに入る辺の数(次数)
+    for (int i = 0; i < n; i++) {  // 次数を数えておく
+        for (auto e : G[i]) {
+            ind[e]++;
+        }
+    }
+    queue<int> que;
+    for (int i = 0; i < n; i++) {  // 次数が0の点をキューに入れる
+        if (ind[i] == 0) {
+            que.push(i);
+        }
+    }
+    while (!que.empty()) {  // 幅優先探索
+        int now = que.front();
+        ans.push_back(now);
+        que.pop();
+        for (auto e : G[now]) {
+            ind[e]--;
+            if (ind[e] == 0) {
+                que.push(e);
+            }
+        }
+    }
+    return ans;
+}
+
+  // 使用例（DAG検出として）https://atcoder.jp/contests/abc216/submissions/25450358
+  signed main() {
+  int N,M;
+  cin >>N >>M;
+  Graph G(N);
+  irep(M) {
+    int K;
+    cin >>K;
+    int before=-1;
+    jrep(K) {
+      int A;
+      cin >>A;
+      A--;
+      if (before==-1) {
+        before=A;
+        continue;
+      }
+      else {
+        G[before].push_back(A);
+      }
+    }
+  }
+  vector<int> A=topo_sort(G);
+  // cout<<A.size()<<endl;
+  if (A.size()==N) cout<<"Yes"<<endl;
+  else cout<<"No"<<endl;
+}
+
+}
+

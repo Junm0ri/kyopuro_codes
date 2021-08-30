@@ -22,6 +22,7 @@ using namespace std;
 using Graph = vector<vector<int>>;
 #define ll long long
 #define P pair<int,int>
+#define vi(V,N) vector<int> (V)(N)
 #define vvi(V,H,W) vector<vector<int>> (V)((H),vector<int>(W));
 #define vvl(V,H,W) vector<vector<ll>> (V)((H),vector<ll>(W));
 #define vvs(V,H,W) vector<vector<string>> (V)((H),vector<string>(W));

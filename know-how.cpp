@@ -35,9 +35,12 @@ int main() {
 }}
 //マンハッタン距離について
 // https://img.atcoder.jp/abc178/editorial-E-phcdiydzyqa.pdf
-// 2つの閉区間[a,b],[c,d]が共通部分を持つかの判定は,max(a,c)<=min(b,c)で可能
+// 2つの閉区間[a,b],[c,d]が共通部分を持つかの判定は,max(a,c)<=min(b,d)で可能
 // https://atcoder.jp/contests/abc207/editorial/2152
 ans += (max(l[i],l[j]) <= min(r[i],r[j]))
+
+// 互いに素な2つの自然数a,bの組み合わせで表現不可能な最大の数はmn-m-nである（Chicken McNugget Theorem）
+// https://codeforces.com/blog/entry/91195
 
 ・確認事項
 // TLEしたら制約に注目！！！
