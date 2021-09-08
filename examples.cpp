@@ -363,6 +363,9 @@ int bitset() { //ビット演算
   b.to_ullong() //unsinged_long longへ変換
   b.to_string() //stirngへ変換
   b.count() //立っているbitの数を数える。
+  // 注意！！bit演算の結果をintに入れようとすると良くないことが起こる！！
+  // 例: int A= BITSET.test(i)
+  // こういうときはbitset<1> Aと宣言してからBITSET.test(i)を代入する
   ・サンプルプログラム
   #include <bits/stdc++.h>
 using namespace std;
@@ -531,7 +534,7 @@ int main() {
   cout << *upper_bound(a.begin(), a.end(), 10) << endl; // 13
 
   //求めた値の「位置」を求める
-  auto it=lower_bound(a.begin(),a.end(),10)-A.begin(); //イテレータ
+  auto it=lower_bound(a.begin(),a.end(),10); //イテレータ
   int id=it-a.begin() //イテレータから「位置」を求める
   cout<<id<<endl; //1
   cout<<a[id]>>endl; //10
