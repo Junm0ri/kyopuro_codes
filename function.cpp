@@ -241,6 +241,46 @@ vector<int> enum_div(int n){ //自分以外の約数全列挙
 int stringcount(string s, char c) { //文字数カウント
     return count(s.cbegin(), s.cend(), c);
 }
+int LCS(string S,string T) { //最長共通部分文字列の長さを返します
+  int SSize=S.size(),TSize=T.size();
+  vvi(dp,SSize+1,TSize+1);
+
+  irep(SSize) {
+    jrep(TSize) {
+      if (S[i]==T[j]) dp[i+1][j+1]=dp[i][j]+1;
+      else dp[i+1][j+1]=max(dp[i][j+1],dp[i+1][j]);
+    }
+  }
+  return dp[SSize][TSize];
+}
+string what_is_LCS(string S,string T) { //LCSを返します
+  string ans;
+
+  int SSize=S.size();
+  int TSize=T.size();
+  vvi (dp,SSize+1,TSize+1);
+ 
+  irepf1(SSize) {
+    jrepf1(TSize) {
+      if (S[i-1]==T[j-1]) dp[i][j]=dp[i-1][j-1]+1;
+      else dp[i][j]=max(dp[i-1][j],dp[i][j-1]);
+    }
+  }
+ 
+  int i=SSize,j=TSize,len=dp[SSize][TSize];
+  while (i>0&&j>0) {
+    if (S[i-1]==T[j-1]) {
+      ans=S[i-1]+ans;
+      i--;
+      j--;
+      len--;
+    }
+    else if (dp[i][j]==dp[i-1][j]) i--;
+    else j--;
+  }
+
+  return ans;
+}
 void dfs_TreeSon (int pos,int pre) {//グローバル変数dpに自身を含む子の個数を格納する
   dp[pos]=1;
   for (int i:G[pos]) {
@@ -253,6 +293,74 @@ void dfs_TreeSon (int pos,int pre) {//グローバル変数dpに自身を含む�
 #include<boost/multiprecision/cpp_int.hpp> 
 //C++で多倍長整数を扱える（メモリと計算量に注意）
 // 上のライブラリをincludeし、宣言をcpp_int Nとするだけで多倍長整数を使える
+line_intersection { //線分の交差判定
+// https://qiita.com/zu_rin/items/e04fdec4e3dec6072104
+
+typedef struct Point_Coordinates {
+    double x, y;
+} point;
+
+
+// 線分ab, cdが交差する場合True
+// 端点が他方の線分上にある場合もTrue
+// 端点が他方の線分の延長線上にある場合もTrueを返すので注意
+int check(point &a, point &b, point &c, point &d) {
+    double s, t;
+    s = (a.x - b.x) * (c.y - a.y) - (a.y - b.y) * (c.x - a.x);
+    t = (a.x - b.x) * (d.y - a.y) - (a.y - b.y) * (d.x - a.x);
+    if (s * t > 0)
+        return false;
+
+    s = (c.x - d.x) * (a.y - c.y) - (c.y - d.y) * (a.x - c.x);
+    t = (c.x - d.x) * (b.y - c.y) - (c.y - d.y) * (b.x - c.x);
+    if (s * t > 0)
+        return false;
+    return true;
+}
+
+}
+Area_triangle() { //3点からなる三角形の面積を返す
+ template <typename T>
+ T AreaOfTriangle(T ax, T ay, T bx, T by, T cx, T cy) {
+   T AX=bx-ax;
+   T AY=by-ay;
+   T BX=cx-ax;
+   T BY=cy-ay;
+   return AX*BY-AY*BX;
+ }
+}
+vector<vector<int>> VVI_rotate(vector<vector<int>> V, int deg) { //2次元配列(N*M)を回転させます。degは90*i(0<=i<=4)
+  vector<vector<int>> ret;
+  int N=V.size();
+  int M=V[0].size();
+
+  if (deg==0||deg==360) return V;
+  else if (deg==90) {
+    ret.resize(M);
+    irep(M) {
+      ret[i].resize(N);
+      jrep(N) ret[i][j]=V[N-1-j][i];
+      Reverse(ret[i]);
+    }
+    Reverse(ret);
+  }
+  else if (deg==180) {
+    ret=V;
+    irep(N) Reverse(ret[i]);
+    Reverse(ret);
+  }
+  else if (deg==270) {
+    ret.resize(M);
+    irep(M) {
+      ret[i].resize(N);
+      jrep(N) ret[i][j]=V[N-1-j][i];
+    }
+  }
+  else cout<<"degが不正です"<<endl;
+
+  return ret;
+}
+
 
 
 void mods() { //mod演算各種

@@ -46,6 +46,7 @@ using Graph = vector<vector<int>>;
 #define Banpei 1000000000 //問題毎に設定
 #define Max_V 100000
 #define mod7 1000000007
+#define mod9 998244353
 #define eps 0.00000001
 #define ALL(V,A) ((V).begin(),(V).end(),(A))
 #define Find(V,X) find(V.begin(),V.end(),X)
@@ -62,17 +63,6 @@ using Graph = vector<vector<int>>;
 #define int long long
 //fixed << setprecision(10) <<
 
-Graph makeGraph(int N, int V) {
-  Graph G(N);
-  irep (V) {
-    int A,B;
-    cin >>A>>B;
-    A--;B--;
-    G[A].push_back(B);
-    G[B].push_back(A);
-  }
-  return G;
-}
 
 signed main() {
   

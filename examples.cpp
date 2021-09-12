@@ -15,7 +15,23 @@ int vector() { //vector
   V.clear(); //全要素削除
 }
 int string() {//string
+// メンバ関数find
 if (S.find(T)+1) //文字列のSの部分文字列に文字列Tが存在するか
+
+
+// メンバ関数compare
+//文字列Sのs文字目~s+l文字目までがabcと一致するか否か
+//一致していれば0が、不一致であればその演算結果が帰ってくる
+// https://marycore.jp/prog/cpp/std-string-equal-compare/
+S.compare(s,l,"abc")
+//例
+std::string s = "a-b-c";
+s.compare(1, 3, "-b-"); // 0
+s.compare(3, 2, "-c");  // 0
+
+s.compare(0, 2, "a-b");    // -1
+s.compare(0, 2, "a-b", 2); //  0
+s.compare(0, 2, std::string("-a-"), 1, 2); // 0
 }
 int find() { //文字列の存在判定
  int main(){
@@ -230,6 +246,8 @@ int set() { //セット
   変数.empty()  // 空ならtrueを返す
 *begin(変数)　//最小値の取得
 *rbegin(変数) //最大値の取得
+auto it=S.lower_bound(A) //二分探索のイテレータ
+int A=*S.lower_bound(A) //二分探索の値
 for (auto value : 変数名) { //ループ
   // valueを使う
   cout <<value<<endl;
