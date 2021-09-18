@@ -255,7 +255,6 @@ for (auto value : 変数名) { //ループ
 
 int main() {
   set<int> S;
-
   S.insert(3);
   S.insert(7);
   S.insert(8);

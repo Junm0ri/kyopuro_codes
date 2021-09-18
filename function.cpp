@@ -225,6 +225,58 @@ ll modfact(ll A, int Mod) { //modを取りながらA!を求める
   if (A==1) return 1;
   else return (A%mod*(modfact(A-1,Mod)%mod))%Mod;
 }
+ll nCk { //二項係数をModを取りながら高速に求める O(n)
+
+// https://algo-logic.info/combination/
+  int MOD=1000000007;
+vector<long long> fact, fact_inv, inv;
+/*  init_nCk :二項係数のための前処理
+    計算量:O(n)
+*/
+void init_nCk(int SIZE) {
+    fact.resize(SIZE + 5);
+    fact_inv.resize(SIZE + 5);
+    inv.resize(SIZE + 5);
+    fact[0] = fact[1] = 1;
+    fact_inv[0] = fact_inv[1] = 1;
+    inv[1] = 1;
+    for (int i = 2; i < SIZE + 5; i++) {
+        fact[i] = fact[i - 1] * i % MOD;
+        inv[i] = MOD - inv[MOD % i] * (MOD / i) % MOD;
+        fact_inv[i] = fact_inv[i - 1] * inv[i] % MOD;
+    }
+}
+/*  nCk :MODでの二項係数を求める(前処理 int_nCk が必要)
+    計算量:O(1)
+*/
+long long nCk(int n, int k) {
+    assert(!(n < k));
+    assert(!(n < 0 || k < 0));
+    return fact[n] * (fact_inv[k] * fact_inv[n - k] % MOD) % MOD;
+}
+
+// 使用例 https://atcoder.jp/contests/abc151/submissions/25911955
+signed main() {
+  init_nCk(1000000);
+  int N,K;
+  cin >>N >>K;
+  vi V(N);
+  irep(N) cin >>V[i];
+  Sort(V);
+
+  int minus=0;
+  int plus=0;
+  irep(N) {
+    int right=N-i-1;
+    if (i>=K-1) plus+=V[i]*nCk(i,K-1);
+    if (right>=K-1) minus+=V[i]*nCk(right,K-1);
+    minus%=mod7;
+    plus%=mod7;
+  }
+  int ans=(plus-minus+mod7)%mod7;
+  cout<<ans<<endl;
+}
+}
 vector<int> enum_div(int n){ //自分以外の約数全列挙
     vector<int> ret;
     if (n==1) return ret;
@@ -326,7 +378,7 @@ Area_triangle() { //3点からなる三角形の面積を返す
    T AY=by-ay;
    T BX=cx-ax;
    T BY=cy-ay;
-   return AX*BY-AY*BX;
+   return (AX*BY-AY*BX)/2;
  }
 }
 vector<vector<int>> VVI_rotate(vector<vector<int>> V, int deg) { //2次元配列(N*M)を回転させます。degは90*i(0<=i<=4)
@@ -360,8 +412,42 @@ vector<vector<int>> VVI_rotate(vector<vector<int>> V, int deg) { //2次元配列
 
   return ret;
 }
+Tentousu{　//配列を突っ込んだら転倒数を返します　O(NlogN)のはず
+struct BIT {
+ private:
+  vector<int> bit;
+  int N;
 
+ public:
+  BIT(int size) {
+    N = size;
+    bit.resize(N + 1);
+  }
 
+  void add(int a, int w) {
+    for (int x = a; x <= N; x += x & -x) bit[x] += w;
+  }
+
+  int sum(int a) {
+    int ret = 0;
+    for (int x = a; x > 0; x -= x & -x) ret += bit[x];
+    return ret;
+  }
+};
+int Tentousu (vi v) {
+  int n=v.size();
+  int Size=100001; //配列中の最大値にすべきだが、ここではMAX<=100000と想定
+  ll ans = 0;
+  BIT b=BIT(Size);  
+  for (int i = 0; i < n; i++) {
+    ans += i - b.sum(v[i]); 
+    b.add(v[i], 1); 
+  }
+
+  return ans;
+}
+
+}
 
 void mods() { //mod演算各種
 /**
@@ -635,7 +721,8 @@ int main(void){
 }
 
 }
-void Tentousu{ // 転倒数計算(BITによる)
+void BIT(Tentousu){ // 転倒数計算(BITによる)
+// 参考ページ：https://algo-logic.info/binary-indexed-tree/
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long int ll;
@@ -679,6 +766,43 @@ int main() {
 
   cout << ans << endl;
 }
+
+/* BIT: RAQ対応BIT
+    初期値は a_1 = a_2 = ... = a_n = 0
+    ・add(l,r,x): [l,r) に x を加算する
+    ・sum(i): a_1 + a_2 + ... + a_i を計算する
+    計算量は全て O(logn)
+*/
+template <typename T>
+struct BIT {
+    int n;             // 要素数
+    vector<T> bit[2];  // データの格納先
+    BIT(int n_) { init(n_); }
+    void init(int n_) {
+        n = n_ + 1;
+        for (int p = 0; p < 2; p++) bit[p].assign(n, 0);
+    }
+    void add_sub(int p, int i, T x) {
+        for (int idx = i; idx < n; idx += (idx & -idx)) {
+            bit[p][idx] += x;
+        }
+    }
+    void add(int l, int r, T x) {  // [l,r) に加算
+        add_sub(0, l, -x * (l - 1));
+        add_sub(0, r, x * (r - 1));
+        add_sub(1, l, x);
+        add_sub(1, r, -x);
+    }
+    T sum_sub(int p, int i) {
+        T s(0);
+        for (int idx = i; idx > 0; idx -= (idx & -idx)) {
+            s += bit[p][idx];
+        }
+        return s;
+    }
+    T sum(int i) { return sum_sub(0, i) + sum_sub(1, i) * i; }
+};
+
 }
 void segT() { //セグメント木
 /* RMQ：[0,n-1] について、区間ごとの最小値を管理する構造体

@@ -46,6 +46,7 @@ using Graph = vector<vector<int>>;
 #define Banpei 1000000000 //問題毎に設定
 #define Max_V 100000
 #define mod7 1000000007
+#define mod9 998244353
 #define eps 0.00000001
 #define ALL(V,A) ((V).begin(),(V).end(),(A))
 #define Find(V,X) find(V.begin(),V.end(),X)

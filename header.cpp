@@ -19,7 +19,6 @@
 using namespace std;
 // #include<boost/multiprecision/cpp_int.hpp>
 // using namespace boost::multiprecision;
-using Graph = vector<vector<int>>;
 #define ll long long
 #define ld long double
 #define pi pair<int,int>
@@ -63,6 +62,18 @@ using Graph = vector<vector<int>>;
 #define int long long
 //fixed << setprecision(10) <<
 
+using Graph = vector<vector<int>>;
+Graph makeGraph(int N, int V) {
+  Graph G(N);
+  irep (V) {
+    int A,B;
+    cin >>A>>B;
+    A--;B--;
+    G[A].push_back(B);
+    G[B].push_back(A);
+  }
+  return G;
+}
 
 signed main() {
   
