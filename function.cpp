@@ -60,13 +60,6 @@ int ctoi(const char c){ //character⇔int変換
 }
 int isInt(double n) { //intか判定
 }
-bool isPrime(ll N) { //素数判定
-  if (N<=1) return false;
-  for (ll i=2; i*i<=N;i++) {
-    if (N%i==0) return false;
-  }
-  return true;
-}
 int Keta(ll N) { //桁を求める
   int ret=1;
   while(1) {
@@ -93,6 +86,9 @@ int modpow(ll n, ll p, ll m) {
         n = n * n % m;
     }
     return ans;
+}
+int modInv(int n, int p) {
+  return modpow(n,p-2,p);
 }
 ll factorial(ll n) { //階乗
     if (n > 0) {
@@ -2350,6 +2346,110 @@ void TopoSort{//トポロジカルソート（DAG判定にも使用可）
   // cout<<A.size()<<endl;
   if (A.size()==N) cout<<"Yes"<<endl;
   else cout<<"No"<<endl;
+}
+
+}
+void TopoSort_Longestpath {//トポロジカルソート、およびソート後の最長経路を取得
+  struct TSPath{
+    Graph stock;
+    vector<int> TS;
+    vector<vector<int>> P; //頂点iの親の集合
+    int N;
+
+    void topo_sort(const Graph &G) {  // bfs
+      stock=G;
+      int n = (int)G.size();
+      N=G.size();
+      vector<int> ind(n);            // ind[i]: 頂点iに入る辺の数(次数)
+      for (int i = 0; i < n; i++) {  // 次数を数えておく
+          for (auto e : G[i]) {
+            ind[e]++;
+          }
+      }
+    queue<int> que;
+    for (int i = 0; i < n; i++) {  // 次数が0の点をキューに入れる
+        if (ind[i] == 0) {
+            que.push(i);
+        }
+    }
+    while (!que.empty()) {  // 幅優先探索
+        int now = que.front();
+        TS.push_back(now);
+        que.pop();
+        for (auto e : G[now]) {
+            ind[e]--;
+            if (ind[e] == 0) {
+                que.push(e);
+            }
+        }
+    }
+  }
+
+    //DAGの判定
+    bool isDAG() {
+      if (TS.size()==N) return 1;
+      else return 0;
+    }
+    
+    //通過する頂点数を返す。
+    // 辺の長さが欲しい場合はret-1が必要
+    int LongestPath() { //先にtopo_sortをしておく
+    int ret=0;
+    P.resize(N);
+
+    if (!isDAG()) return -1;
+
+    for (int i=0;i<N;i++) {
+      for (int x:stock[i]) P[x].push_back(i);
+    }
+
+    vector<int> dp(N);
+    for (int i=0;i<N;i++) {
+      int cur=TS[i];
+      if (P[cur].size()==0) dp[cur]=1;
+      else {
+        for (auto x:P[cur]) cmax(dp[cur],dp[x]+1);
+      }
+    }
+    for (int i=0;i<N;i++) ret=max(ret,dp[i]);
+    return ret;
+  }
+  };
+
+  //使用例 https://codeforces.com/contest/1572/submission/129218810
+  //↑の場合はある条件の場合のみ長さに+1している
+  void solve() {
+  int N;
+  cin >>N;
+  Graph G(N); //有向グラフG(親：理解に必要なページ)
+  irep(N) {
+    int K;
+    cin >>K;
+    jrep(K) {
+      int A;
+      cin >>A;
+      A--;
+      G[A].push_back(i);
+    }
+  }
+  TSPath TP;
+  TP.topo_sort(G);
+  cout<<TP.LongestPath()<<endl;
+}
+  //使用例2 https://atcoder.jp/contests/dp/tasks/dp_g
+  signed main() {
+  int N,M;
+  cin >>N >>M;
+  Graph G(N);
+  irep(M) {
+    int A,B;
+    cin >>A>>B;
+    A--;B--;
+    G[A].push_back(B);
+  }
+  TSPath TP;
+  TP.topo_sort(G);
+  cout<<TP.LongestPath()-1<<endl;
 }
 
 }

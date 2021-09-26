@@ -40,8 +40,8 @@ using Graph = vector<vector<int>>;
 #define jrepf1(n) for (int j=1; j <= (n); ++j)
 #define krep(n) for (int k=0; k < (n); ++k)
 #define krepf1(n) for (int k=1; k <= (n); ++k)
-#define REP(i,s,e) for (int (i)=(s); (i)<(e);(i)++)
-#define PER(i,s,e) for (int (i)=(s); (i)>=(e);(i)--)
+#define rep(i,s,e) for (int (i)=(s); (i)<(e);(i)++)
+#define per(i,s,e) for (int (i)=(s); (i)>=(e);(i)--)
 #define PI 3.14159265358979323846264338327950288
 #define Banpei 1000000000 //問題毎に設定
 #define Max_V 100000

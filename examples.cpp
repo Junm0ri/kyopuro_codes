@@ -1,6 +1,14 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+void time() { //時間を計測して使用
+  // #define ENDLOOP clock_t END = clock(); if(((long double)(END - START) / CLOCKS_PER_SEC * 1000.0) > TIME) break;
+  // constexpr long double TIME = 2.0* 98000.0 / 100.0;
+  // int main() {
+  //   clock_t START;
+  //   ENDLOOP
+  // }
+}
 int iota() { //iota
   iota(V.begin(),V.end(),K); //K,K+1,K+2...Nの配列にする。
 }
@@ -594,6 +602,8 @@ cin >>S;
 cout<<count(S.begin(),S.end(),'a')<<endl;
 }
 }
-
+int modInverse {//逆元 × mod
+  // A/B(mod P)をしたい時はBの逆元P^-1(mod P)を求め、A*B^-1で求められる
+}
 
 
