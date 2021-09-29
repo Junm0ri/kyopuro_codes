@@ -409,6 +409,12 @@ vector<vector<int>> VVI_rotate(vector<vector<int>> V, int deg) { //2次元配列
   return ret;
 }
 Tentousu{　//配列を突っ込んだら転倒数を返します　O(NlogN)のはず
+/*
+注意！！
+最大値以上の要素があるときは座圧が必要（これも組み込むべきか）
+マイナスがある場合も座圧が必要
+*/
+
 struct BIT {
  private:
   vector<int> bit;

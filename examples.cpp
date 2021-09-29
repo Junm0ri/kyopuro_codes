@@ -70,6 +70,16 @@ to_string(num);
 //文字列を数値列に変換
 stoi("1010");
 
+// K進数の文字列を10進数に変換
+signed main() {
+  int K;
+  string A,B; 
+  cin >>K >>A>>B;
+  long C=stol(A,nullptr,K);
+  long D=stol(B,nullptr,K);
+  cout<<C*D<<endl;
+}
+
 }
 int substr(){ //文字列の一部を取得
 宣言
@@ -306,6 +316,25 @@ int multiset() { //マルチセット
   auto it = s.find(4);
   if (it != s.end()) s.erase(it);
   for(auto i=s.begin();i!=s.end();i++)cout << *i << endl;//1 4 5
+}
+int PBDS() { //Policy Based Data Structure
+//参考 https://xuzijian629.hatenablog.com/entry/2018/12/01/000010
+
+// tree
+// 宣言（intの部分をpair<int,int>などにもできる）
+// 基本的にはSetと同じ使い方
+tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> S;
+
+// 使用方法
+S.insert(A);
+S.erase(A);
+S.find_by_order(A) //A番目の要素のイテレータを返す
+S.order_by_key(A) //A未満の要素の数を返す
+
+// hash table
+// 宣言
+// 使い方はunordered_mapと同様
+gp_hash_table<int, int> m;
 }
 int stack() { //スタック
     #include <bits/stdc++.h>

@@ -16,10 +16,11 @@
 
 #include <bits/stdc++.h>
 #include<cmath>
+#include <ext/pb_ds/assoc_container.hpp>
 using namespace std;
+using namespace __gnu_pbds;
 // #include<boost/multiprecision/cpp_int.hpp>
 // using namespace boost::multiprecision;
-using Graph = vector<vector<int>>;
 #define ll long long
 #define ld long double
 #define pi pair<int,int>
