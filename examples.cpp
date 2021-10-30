@@ -323,7 +323,6 @@ int PBDS() { //Policy Based Data Structure
 // tree
 // 宣言（intの部分をpair<int,int>などにもできる）
 // 基本的にはSetと同じ使い方
-tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> S;
 
 // 使用方法
 S.insert(A);

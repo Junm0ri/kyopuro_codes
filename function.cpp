@@ -90,6 +90,14 @@ int modpow(ll n, ll p, ll m) {
 int modInv(int n, int p) {
   return modpow(n,p-2,p);
 }
+int Press(vector<int> &V) {//座圧
+  map<int,int> M;
+  for (auto x:V) M[x]=0;
+  int count=0;
+  for (auto &x:M) x.second=count++;
+  for (auto &x:V) x=M[x];
+  return count;
+}
 ll factorial(ll n) { //階乗
     if (n > 0) {
         return n * factorial(n - 1);
@@ -411,8 +419,9 @@ vector<vector<int>> VVI_rotate(vector<vector<int>> V, int deg) { //2次元配列
 Tentousu{　//配列を突っ込んだら転倒数を返します　O(NlogN)のはず
 /*
 注意！！
-最大値以上の要素があるときは座圧が必要（これも組み込むべきか）
-マイナスがある場合も座圧が必要
+最大値以上の要素があるときは座圧が必要（これも組み込むべきか）←組み込みました
+マイナスがある場合も座圧が必要←座圧します
+要素数が200000を超える場合はSizeの変更が必要←座圧したので大丈夫
 */
 
 struct BIT {
@@ -438,7 +447,17 @@ struct BIT {
 };
 int Tentousu (vi v) {
   int n=v.size();
-  int Size=100001; //配列中の最大値にすべきだが、ここではMAX<=100000と想定
+  int Size=n+1; //配列中の最大値=v.size（座圧するから）
+
+  // 座圧
+  vector<int> stock=v;
+  Sort(stock);
+  map<int,int> M;
+  for (int i=0;i<n;i++) {
+    M[stock[i]]=i+1;
+  }
+  for (int i=0;i<n;i++) v[i]=M[v[i]];
+
   ll ans = 0;
   BIT b=BIT(Size);  
   for (int i = 0; i < n; i++) {
